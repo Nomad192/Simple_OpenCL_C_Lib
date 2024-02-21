@@ -1,0 +1,11 @@
+*
+
+!*.c
+!*.h
+!*.git*
+!CMakeLists.txt
+
+!/include/
+!/src/
+
+!/example/

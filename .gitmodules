@@ -1,0 +1,3 @@
+[submodule "c-logs"]
+	path = c-logs
+	url = git@github.com:Nomad192-educational-projects/c-logs.git

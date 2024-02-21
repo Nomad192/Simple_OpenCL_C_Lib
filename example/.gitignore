@@ -1,0 +1,9 @@
+*
+
+!*.c
+!*.h
+!*.cl
+!*.git*
+!CMakeLists.txt
+
+!/cl-src/
