@@ -19,6 +19,7 @@ set(LIB_SRC
         ${SRC_DIR}/scl_device.c
         ${SRC_DIR}/scl_load_source.c
         ${SRC_DIR}/scl_vector.c
+        ${SRC_DIR}/scl_compile.c
 )
 
 set(LIB_INC

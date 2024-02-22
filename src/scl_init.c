@@ -27,6 +27,7 @@ SCL *scl_create() {
         scl->sources = vec_create(sizeof(char *), 10);
 
         scl->error = (char *) malloc(sizeof(char) * 1000);
+        scl->cl_errcode = CL_SUCCESS;
     }
 
     return scl;

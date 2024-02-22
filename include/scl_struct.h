@@ -22,7 +22,13 @@ typedef struct SCL_Struct {
 
     VECTOR *sources;
 
+    cl_context context;
+    cl_program program;
+
+    char *build_log;
+
     char *error;
+    cl_int cl_errcode;
 } SCL;
 
 #endif //SIMPLE_OPENCL_C_LIB__SCL_STRUCT_H
