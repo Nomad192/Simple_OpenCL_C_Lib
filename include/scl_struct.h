@@ -1,5 +1,7 @@
-#ifndef SIMPLE_OPENCL_C_LIB_SCL_STRUCT_H
-#define SIMPLE_OPENCL_C_LIB_SCL_STRUCT_H
+#ifndef SIMPLE_OPENCL_C_LIB__SCL_STRUCT_H
+#define SIMPLE_OPENCL_C_LIB__SCL_STRUCT_H
+
+#include <CL/cl.h>
 
 #include "scl_types.h"
 
@@ -20,4 +22,4 @@ typedef struct SCL_Struct {
     char *error;
 } SCL;
 
-#endif //SIMPLE_OPENCL_C_LIB_SCL_STRUCT_H
+#endif //SIMPLE_OPENCL_C_LIB__SCL_STRUCT_H

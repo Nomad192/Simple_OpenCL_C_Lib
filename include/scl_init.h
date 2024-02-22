@@ -1,5 +1,5 @@
-#ifndef SIMPLE_OPENCL_C_LIB_INIT_H
-#define SIMPLE_OPENCL_C_LIB_INIT_H
+#ifndef SIMPLE_OPENCL_C_LIB__SCL_INIT_H
+#define SIMPLE_OPENCL_C_LIB__SCL_INIT_H
 
 #include <CL/cl.h>
 
@@ -22,12 +22,6 @@ SCL *create();
 
 scl_status init(SCL *scl, scl_number target_platform_number, scl_number target_device_number);
 
-scl_status get_platform_id(SCL *scl, scl_number target_platform_number);
-scl_status get_device_id(SCL *scl, scl_number target_device_number);
-
-scl_status get_platform_name(SCL *scl);
-scl_status get_device_name(SCL *scl);
-
 void scl_free(SCL *scl);
 
-#endif //SIMPLE_OPENCL_C_LIB_INIT_H
+#endif //SIMPLE_OPENCL_C_LIB__SCL_INIT_H
