@@ -3,22 +3,31 @@
 
 #include <CL/cl.h>
 
-/******************************************************************************/
+#include "scl_types.h"
+#include "scl_struct.h"
 
-typedef signed __int32 init_status;
-typedef unsigned int init_number;
+void scl_print_error(SCL* scl);
 
-/* Error Codes */
-#define INIT_SUCCESS            (0)
-#define INIT_ERROR				(-1)
-#define INIT_OUT_OF_MEMORY      (-2)
+#define CHECK_AND_PRINT(SCL_STRUCT, FUNC) { \
+    scl_status check_status = FUNC; if (check_status != SCL_SUCCESS) \
+    { scl_print_error(SCL_STRUCT); return check_status; } \
+}
 
-/******************************************************************************/
+#define CHECK(FUNC) { \
+    scl_status check_status = FUNC; if (check_status != SCL_SUCCESS) \
+    { return check_status; } \
+}
 
-init_status get_platform_id(cl_platform_id** platforms, cl_platform_id* platform_id, init_number platform_number);
-init_status get_device_id(cl_platform_id platform_id, cl_device_id** devices, cl_device_id* device_id, init_number device_number);
+SCL* create();
 
-init_status print_platform_name(cl_platform_id platform_id);
-init_status print_device_name(cl_device_id device_id);
+scl_status init(SCL *scl, scl_number target_platform_number, scl_number target_device_number);
+
+scl_status get_platform_id(SCL* scl, scl_number target_platform_number);
+scl_status get_device_id(SCL* scl, scl_number target_device_number);
+
+scl_status get_platform_name(SCL* scl);
+scl_status get_device_name(SCL* scl);
+
+void scl_free(SCL* scl);
 
 #endif //SIMPLE_OPENCL_C_LIB_INIT_H
