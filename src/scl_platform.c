@@ -19,7 +19,7 @@ scl_status get_platform_id(SCL *scl, scl_number target_platform_number) {
     if (status != CL_SUCCESS) {
         scl->num_platforms = -1;
         sprintf(scl->error, "FAIL get_platform_id. Failed to get the number of platforms.\n");
-        return SCL_ERROR;
+        return SCL_OPENCL_ERROR;
     }
 
     if (scl->num_platforms == 0) {
@@ -43,7 +43,7 @@ scl_status get_platform_id(SCL *scl, scl_number target_platform_number) {
     status = clGetPlatformIDs(scl->num_platforms, scl->platforms, NULL);
     if (status != CL_SUCCESS) {
         sprintf(scl->error, "FAIL get_platform_id. Failed to get platforms.\n");
-        return SCL_ERROR;
+        return SCL_OPENCL_ERROR;
     }
 
     scl->platform_number = target_platform_number;
@@ -63,7 +63,7 @@ scl_status get_platform_name(SCL *scl) {
     status = clGetPlatformInfo(scl->platform_id, CL_PLATFORM_NAME, 0, NULL, &str_info_size);
     if (status != CL_SUCCESS) {
         sprintf(scl->error, "FAIL get_platform_name. error get CL_PLATFORM_NAME size.\n");
-        return SCL_ERROR;
+        return SCL_OPENCL_ERROR;
     }
     scl->platform_name = (char *) malloc(str_info_size);
     if (scl->platform_name == NULL) {
@@ -75,7 +75,7 @@ scl_status get_platform_name(SCL *scl) {
         sprintf(scl->error, "FAIL get_platform_name. error get CL_PLATFORM_NAME.\n");
         free(scl->platform_name);
         scl->platform_name = NULL;
-        return SCL_ERROR;
+        return SCL_OPENCL_ERROR;
     }
 
     return SCL_SUCCESS;

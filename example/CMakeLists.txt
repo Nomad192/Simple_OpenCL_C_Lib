@@ -5,6 +5,9 @@ set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_STANDARD_EXTENSIONS OFF)
 
+set(OpenCL_VERSION 120)
+add_definitions(-DCL_TARGET_OPENCL_VERSION=${OpenCL_VERSION})
+
 add_subdirectory(../ Simple_OpenCL_C_Lib)
 add_executable(test test.c)
 target_link_libraries(test PRIVATE Simple_OpenCL_C_Lib)

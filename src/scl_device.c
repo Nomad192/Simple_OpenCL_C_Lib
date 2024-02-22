@@ -25,7 +25,7 @@ scl_status get_device_id(SCL *scl, scl_number target_device_number) {
         sprintf(scl->error,
                 "FAIL get_device_id. 1. Failed to get the number of devices in the platform_id %" PRIdPTR ".\n",
                 (intptr_t) scl->platform_id);
-        return SCL_ERROR;
+        return SCL_OPENCL_ERROR;
     }
 
     if (scl->num_devices == 0) {
@@ -48,7 +48,7 @@ scl_status get_device_id(SCL *scl, scl_number target_device_number) {
     status = clGetDeviceIDs(scl->platform_id, CL_DEVICE_TYPE_ALL, scl->num_devices, scl->devices, NULL);
     if (status != CL_SUCCESS) {
         sprintf(scl->error, "FAIL get_device_id. 5. Failed to get devices.\n");
-        return SCL_ERROR;
+        return SCL_OPENCL_ERROR;
     }
 
     scl->device_number = target_device_number;
@@ -68,7 +68,7 @@ scl_status get_device_name(SCL *scl) {
     status = clGetDeviceInfo(scl->device_id, CL_DEVICE_NAME, 0, NULL, &str_info_size);
     if (status != CL_SUCCESS) {
         sprintf(scl->error, "FAIL get_device_name. error get CL_DEVICE_NAME size.\n");
-        return SCL_ERROR;
+        return SCL_OPENCL_ERROR;
     }
     scl->device_name = (char *) malloc(str_info_size);
     if (scl->device_name == NULL) {
@@ -80,7 +80,7 @@ scl_status get_device_name(SCL *scl) {
         sprintf(scl->error, "FAIL get_device_name. error get CL_DEVICE_NAME.\n");
         free(scl->device_name);
         scl->device_name = NULL;
-        return SCL_ERROR;
+        return SCL_OPENCL_ERROR;
     }
 
     return SCL_SUCCESS;

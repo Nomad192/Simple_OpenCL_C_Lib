@@ -4,6 +4,7 @@
 #include <CL/cl.h>
 
 #include "scl_types.h"
+#include "scl_vector.h"
 
 typedef struct SCL_Struct {
     scl_number platform_number;
@@ -18,6 +19,8 @@ typedef struct SCL_Struct {
     cl_device_id *devices;
     cl_device_id device_id;
     char *device_name;
+
+    VECTOR *sources;
 
     char *error;
 } SCL;
