@@ -3,6 +3,7 @@
 
 #include "scl_struct.h"
 
+char *scl_get_source(SCL *scl, size_t i);
 void scl_print_error(SCL *scl);
 
 #define CHECK_AND_PRINT(SCL_STRUCT, FUNC) { \

@@ -49,8 +49,11 @@ void scl_free(SCL *scl) {
     free(scl->platforms);
     free(scl->platform_name);
 
+    clReleaseProgram(scl->program);
+    clReleaseContext(scl->context);
+
     for (size_t i = 0; i < scl->sources->size; ++i)
-        free(*(char **) vector_get(scl->sources, i));
+        free(scl_get_source(scl, i));
 
     vec_free(scl->sources);
 
