@@ -27,7 +27,7 @@ int main(void) {
 
     printf("Build success.");
 
-    cl_kernel kernel = clCreateKernel(scl->program, "add", NULL);
+    cl_kernel kernel = clCreateKernel(scl->program, "APlusB", NULL);
 
     cl_mem a_mem = clCreateBuffer(scl->context, CL_MEM_READ_ONLY, sizeof(cl_int), NULL, NULL);
     cl_mem b_mem = clCreateBuffer(scl->context, CL_MEM_READ_ONLY, sizeof(cl_int), NULL, NULL);
