@@ -6,7 +6,9 @@ const scl_number PLATFORM_NUMBER = 0;
 const scl_number DEVICE_NUMBER = 0;
 
 void print_init_info(SCL *scl);
+
 void print_source(SCL *scl);
+
 void print_build_log(SCL *scl);
 
 int main(void) {
@@ -24,6 +26,36 @@ int main(void) {
     print_build_log(scl);
 
     printf("Build success.");
+
+    cl_kernel kernel = clCreateKernel(scl->program, "add", NULL);
+
+    cl_mem a_mem = clCreateBuffer(scl->context, CL_MEM_READ_ONLY, sizeof(cl_int), NULL, NULL);
+    cl_mem b_mem = clCreateBuffer(scl->context, CL_MEM_READ_ONLY, sizeof(cl_int), NULL, NULL);
+    cl_mem c_mem = clCreateBuffer(scl->context, CL_MEM_WRITE_ONLY, sizeof(cl_int), NULL, NULL);
+
+    clSetKernelArg(kernel, 0, sizeof(cl_mem), &a_mem);
+    clSetKernelArg(kernel, 1, sizeof(cl_mem), &b_mem);
+    clSetKernelArg(kernel, 2, sizeof(cl_mem), &c_mem);
+
+    cl_command_queue command_queue = clCreateCommandQueue(scl->context, scl->device_id, 0, NULL);
+
+    cl_int a = 2, b = 3;
+    clEnqueueWriteBuffer(command_queue, a_mem, CL_FALSE, 0, sizeof(cl_int), &a, 0, NULL, NULL);
+    clEnqueueWriteBuffer(command_queue, b_mem, CL_FALSE, 0, sizeof(cl_int), &b, 0, NULL, NULL);
+
+    size_t one = 1;
+    clEnqueueNDRangeKernel(command_queue, kernel, 1, NULL, &one, NULL, 0, NULL, NULL);
+
+    cl_int c;
+    clEnqueueReadBuffer(command_queue, c_mem, CL_TRUE, 0, sizeof(cl_int), &c, 0, NULL, NULL);
+
+    printf("Executed %d + %d successfully, got %d (expected %d).\n", a, b, c, a + b);
+
+    clReleaseMemObject(a_mem);
+    clReleaseMemObject(b_mem);
+    clReleaseMemObject(c_mem);
+    clReleaseKernel(kernel);
+    clReleaseCommandQueue(command_queue);
 
     scl_free(scl);
     return 0;
