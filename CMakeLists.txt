@@ -13,16 +13,8 @@ set(SRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
 set(INC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 set(LIB_SRC
-        ${SRC_DIR}/scl_init.c
-        ${SRC_DIR}/scl_tools.c
-        ${SRC_DIR}/scl_platform.c
-        ${SRC_DIR}/scl_device.c
         ${SRC_DIR}/scl_load_source.c
         ${SRC_DIR}/scl_vector.c
-        ${SRC_DIR}/scl_compile.c
-        ${SRC_DIR}/scl_kernel.c
-        ${SRC_DIR}/scl_queue.c
-        ${SRC_DIR}/scl_buffer.c
 )
 
 set(LIB_INC

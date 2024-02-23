@@ -2,12 +2,11 @@
 #define SIMPLE_OPENCL_C_LIB__SCL_VECTOR_H
 
 #include "scl_types.h"
-#include <stdlib.h>
 
 typedef struct VECTOR_STRUCT {
     size_t type_size;
     size_t real_size;
-    size_t size;
+    size_t length;
     void *data;
 } VECTOR;
 

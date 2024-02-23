@@ -6,68 +6,80 @@
 #include "scl_tools.h"
 #include "scl_vector.h"
 
-scl_status read_file(SCL *scl, const char *filename, char **result);
+scl_status read_file(const char *filename, char **result);
 
-scl_status load_source(SCL *scl, const char *filename) {
+scl_status load_source(VECTOR *sources, const char *filename) {
     char* file;
-    CHECK_NO_PRINT(read_file(scl, filename, &file))
-    if(vec_add(scl->sources, &file, 1) != SCL_SUCCESS) {
-        sprintf(scl->error, "FAIL load_source. error realloc.\n");
+    if(read_file(filename, &file) != SCL_SUCCESS) {
+        return DEFAULT_ERROR;
+    }
+    if(vec_add(sources, &file, 1) != SCL_SUCCESS) {
+        fprintf(stderr, "FAIL load_source. error realloc.\n");
         free(file);
-        return SCL_OUT_OF_MEMORY;
+        return DEFAULT_ERROR;
     }
     return SCL_SUCCESS;
 }
 
+char *scl_get_source(VECTOR *sources, size_t i) {
+    return *(char **) vector_get(sources, i);
+}
+
+void free_source(VECTOR *sources) {
+    for (size_t i = 0; i < sources->length; ++i)
+        free(scl_get_source(sources, i));
+    vec_free(sources);
+}
+
 #define INITIAL_BUFFER_SIZE 1024
 
-scl_status read_file(SCL *scl, const char *filename, char **result) {
+scl_status read_file(const char *filename, char **result) {
     FILE *file = fopen(filename, "rt");
     if (file == NULL) {
-        sprintf(scl->error, "FAIL read_file. file \"%s\" not open.\n", filename);
-        return SCL_FILE_NOT_OPEN;
+        fprintf(stderr, "FAIL read_file. file \"%s\" not open.\n", filename);
+        return DEFAULT_ERROR;
     }
 
     VECTOR *buffer = vec_create(sizeof(char), INITIAL_BUFFER_SIZE);
 
     if (buffer == NULL) {
-        sprintf(scl->error, "FAIL read_file. error malloc.\n");
+        fprintf(stderr, "FAIL read_file. error malloc.\n");
         fclose(file);
-        return SCL_OUT_OF_MEMORY;
+        return DEFAULT_ERROR;
     }
 
     while (feof(file) == 0) {
         if (vec_check_size(buffer) != SCL_SUCCESS) {
-            sprintf(scl->error, "FAIL read_file. error realloc.\n");
+            fprintf(stderr, "FAIL read_file. error realloc.\n");
             vec_free(buffer);
             fclose(file);
-            return SCL_OUT_OF_MEMORY;
+            return DEFAULT_ERROR;
         }
 
-        size_t bytes_read = fread(buffer->data + (buffer->size * sizeof(char)), sizeof(char),
-                                  buffer->real_size - buffer->size, file);
+        size_t bytes_read = fread(buffer->data + (buffer->length * sizeof(char)), sizeof(char),
+                                  buffer->real_size - buffer->length, file);
         if (ferror(file)) {
-            sprintf(scl->error, "FAIL read_file. error reading file.\n");
+            fprintf(stderr, "FAIL read_file. error reading file.\n");
             vec_free(buffer);
             fclose(file);
-            return SCL_ERROR;
+            return DEFAULT_ERROR;
         }
 
-        buffer->size += bytes_read;
+        buffer->length += bytes_read;
     }
     char end = '\0';
     if (vec_add(buffer, &end, 1) != SCL_SUCCESS) {
-        sprintf(scl->error, "FAIL read_file. error realloc.\n");
+        fprintf(stderr, "FAIL read_file. error realloc.\n");
         vec_free(buffer);
         fclose(file);
-        return SCL_OUT_OF_MEMORY;
+        return DEFAULT_ERROR;
     }
 
     if (vec_cut(buffer) != SCL_SUCCESS) {
-        sprintf(scl->error, "FAIL read_file. error realloc.\n");
+        fprintf(stderr, "FAIL read_file. error realloc.\n");
         vec_free(buffer);
         fclose(file);
-        return SCL_OUT_OF_MEMORY;
+        return DEFAULT_ERROR;
     }
 
     *result = (char *) vec_unlink(buffer);
