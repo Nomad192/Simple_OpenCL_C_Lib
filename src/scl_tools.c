@@ -8,5 +8,5 @@ char *scl_get_source(SCL *scl, size_t i) {
 }
 
 void scl_print_error(SCL *scl) {
-    fprintf(stderr, "cl_errcode: %" PRIu32 "\n%s\n", scl->cl_errcode, scl->error);
+    fprintf(stderr, "cl_errcode: %" PRIi32 "\n%s\n", scl->cl_errcode, scl->error);
 }

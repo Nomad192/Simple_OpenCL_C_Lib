@@ -10,7 +10,7 @@ scl_status read_file(SCL *scl, const char *filename, char **result);
 
 scl_status load_source(SCL *scl, const char *filename) {
     char* file;
-    CHECK(read_file(scl, filename, &file))
+    CHECK_NO_PRINT(read_file(scl, filename, &file))
     if(vec_add(scl->sources, &file, 1) != SCL_SUCCESS) {
         sprintf(scl->error, "FAIL load_source. error realloc.\n");
         free(file);

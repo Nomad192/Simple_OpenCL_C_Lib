@@ -26,6 +26,8 @@ SCL *scl_create() {
 
         scl->sources = vec_create(sizeof(char *), 10);
 
+        scl->build_log = NULL;
+
         scl->error = (char *) malloc(sizeof(char) * 1000);
         scl->cl_errcode = CL_SUCCESS;
     }
@@ -34,10 +36,10 @@ SCL *scl_create() {
 }
 
 scl_status scl_init(SCL *scl, scl_number target_platform_number, scl_number target_device_number) {
-    CHECK(get_platform_id(scl, target_platform_number))
-    CHECK(get_platform_name(scl))
-    CHECK(get_device_id(scl, target_device_number))
-    CHECK(get_device_name(scl))
+    CHECK_NO_PRINT(get_platform_id(scl, target_platform_number))
+    CHECK_NO_PRINT(get_platform_name(scl))
+    CHECK_NO_PRINT(get_device_id(scl, target_device_number))
+    CHECK_NO_PRINT(get_device_name(scl))
 
     return SCL_SUCCESS;
 }

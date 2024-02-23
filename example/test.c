@@ -16,26 +16,54 @@ int main(void) {
         return -1;
     }
 
-    CHECK_AND_PRINT(scl, scl_init(scl, PLATFORM_NUMBER, DEVICE_NUMBER))
+    CHECK(scl, scl_init(scl, PLATFORM_NUMBER, DEVICE_NUMBER))
     print_init_info(scl);
-    CHECK_AND_PRINT(scl, load_source(scl, "main.cl"))
+    CHECK(scl, load_source(scl, "main.cl"))
     print_source(scl);
-    CHECK_AND_PRINT(scl, compile(scl))
+    CHECK(scl, compile(scl))
     print_build_log(scl);
 
     printf("Build success.");
 
-    cl_kernel kernel = clCreateKernel(scl->program, "add", NULL);
+//    cl_kernel kernel = clCreateKernel(scl->program, "add", NULL);
 
-    cl_mem a_mem = clCreateBuffer(scl->context, CL_MEM_READ_ONLY, sizeof(cl_int), NULL, NULL);
-    cl_mem b_mem = clCreateBuffer(scl->context, CL_MEM_READ_ONLY, sizeof(cl_int), NULL, NULL);
-    cl_mem c_mem = clCreateBuffer(scl->context, CL_MEM_WRITE_ONLY, sizeof(cl_int), NULL, NULL);
+//    SCL_KERNEL *scl_kernel;
+//    cl_kernel kernel;
+//    CHECK(scl, scl_kernel_create_return_errcode(scl, scl->program, "add", &kernel))
 
-    clSetKernelArg(kernel, 0, sizeof(cl_mem), &a_mem);
-    clSetKernelArg(kernel, 1, sizeof(cl_mem), &b_mem);
-    clSetKernelArg(kernel, 2, sizeof(cl_mem), &c_mem);
+    GET_CL(cl_kernel, kernel, clCreateKernel(scl->program, "add", &errcode))
 
-    cl_command_queue command_queue = clCreateCommandQueue(scl->context, scl->device_id, 0, NULL);
+//    GET(cl_kernel kernel, scl, scl_kernel_create_return_errcode(scl, scl->program, "add", &kernel))
+
+    //    CHECK(scl, scl_kernel_create_return_errcode(scl, scl->context, scl->device_id, &scl_kernel))
+//    CHECK(scl, scl_kernel_init(scl, scl_kernel, scl->program, "add"))
+
+    GET_CL(cl_mem, a_mem, clCreateBuffer(scl->context, CL_MEM_READ_ONLY, sizeof(cl_int), NULL, &errcode))
+    GET_CL(cl_mem, b_mem, clCreateBuffer(scl->context, CL_MEM_READ_ONLY, sizeof(cl_int), NULL, &errcode))
+    GET_CL(cl_mem, c_mem, clCreateBuffer(scl->context, CL_MEM_WRITE_ONLY, sizeof(cl_int), NULL, &errcode))
+//
+//    GET(cl_mem a_mem, scl,
+//        scl_buffer_create_return_errcode(scl, scl->context, CL_MEM_READ_ONLY, sizeof(cl_int), NULL, &a_mem))
+//    GET(cl_mem b_mem, scl,
+//        scl_buffer_create_return_errcode(scl, scl->context, CL_MEM_READ_ONLY, sizeof(cl_int), NULL, &b_mem))
+//    GET(cl_mem c_mem, scl,
+//        scl_buffer_create_return_errcode(scl, scl->context, CL_MEM_WRITE_ONLY, sizeof(cl_int), NULL, &c_mem))
+
+//    cl_mem a_mem = clCreateBuffer(scl->context, CL_MEM_READ_ONLY, sizeof(cl_int), NULL, NULL);
+//    cl_mem b_mem = clCreateBuffer(scl->context, CL_MEM_READ_ONLY, sizeof(cl_int), NULL, NULL);
+//    cl_mem c_mem = clCreateBuffer(scl->context, CL_MEM_WRITE_ONLY, sizeof(cl_int), NULL, NULL);
+
+    CHECK_CL(clSetKernelArg(kernel, 0, sizeof(cl_mem), &a_mem))
+    CHECK_CL(clSetKernelArg(kernel, 1, sizeof(cl_mem), &b_mem))
+    CHECK_CL(clSetKernelArg(kernel, 2, sizeof(cl_mem), &c_mem))
+
+//    clSetKernelArg(kernel, 0, sizeof(cl_mem), &a_mem);
+//    clSetKernelArg(kernel, 1, sizeof(cl_mem), &b_mem);
+//    clSetKernelArg(kernel, 2, sizeof(cl_mem), &c_mem);
+
+    //cl_command_queue command_queue = clCreateCommandQueue(scl->context, scl->device_id, 0, NULL);
+    GET(cl_command_queue command_queue, scl,
+        scl_queue_create_return_errcode(scl, scl->context, scl->device_id, 0, &command_queue))
 
     cl_int a = 2, b = 3;
     clEnqueueWriteBuffer(command_queue, a_mem, CL_FALSE, 0, sizeof(cl_int), &a, 0, NULL, NULL);
@@ -53,8 +81,11 @@ int main(void) {
     clReleaseMemObject(b_mem);
     clReleaseMemObject(c_mem);
     clReleaseKernel(kernel);
-    clReleaseCommandQueue(command_queue);
+//    clReleaseCommandQueue(command_queue);
 
+//    scl_kernel_free(scl_kernel);
+    scl_kernel_free(kernel);
+    scl_queue_free(command_queue);
     scl_free(scl);
     return 0;
 }

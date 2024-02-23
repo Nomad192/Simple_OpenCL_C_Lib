@@ -42,7 +42,7 @@ scl_status vec_cut(VECTOR *vector) {
 
 scl_status vec_add(VECTOR *vector, void *elements, size_t number) {
     vector->size += number;
-    CHECK(vec_check_size(vector))
+    CHECK_NO_PRINT(vec_check_size(vector))
 
     memcpy(vector->data + ((vector->size - number) * vector->type_size), elements, vector->type_size * number);
 

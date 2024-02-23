@@ -10,5 +10,8 @@
 #include "scl_load_source.h"
 #include "scl_vector.h"
 #include "scl_compile.h"
+#include "scl_kernel.h"
+#include "scl_queue.h"
+#include "scl_buffer.h"
 
 #endif //SIMPLE_OPENCL_C_LIB__SCL_H

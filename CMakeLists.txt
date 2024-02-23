@@ -20,6 +20,9 @@ set(LIB_SRC
         ${SRC_DIR}/scl_load_source.c
         ${SRC_DIR}/scl_vector.c
         ${SRC_DIR}/scl_compile.c
+        ${SRC_DIR}/scl_kernel.c
+        ${SRC_DIR}/scl_queue.c
+        ${SRC_DIR}/scl_buffer.c
 )
 
 set(LIB_INC
