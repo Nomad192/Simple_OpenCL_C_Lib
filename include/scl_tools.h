@@ -60,14 +60,7 @@ GET_CL_PARAM_WITH_SIZE(TYPE, VARIABLE, cl_uint, VARIABLE_NUM, FUNC_GET_NUM, FUNC
     if (VARIABLE == NULL) { fprintf(stderr, "Error get " #VARIABLE "\n"); global_errcode = DEFAULT_ERROR; goto clean; } \
 }
 
-#define FREE(PTR) \
-{ \
-    if (PTR != NULL) \
-    { \
-        free(PTR);\
-        PTR = NULL; \
-    } \
-}
+#define FREE(PTR) CUSTOM_FREE(PTR, free)
 
 #define CUSTOM_FREE(PTR, FUNC) \
 { \
