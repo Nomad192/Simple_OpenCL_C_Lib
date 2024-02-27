@@ -13,7 +13,7 @@ void print_source(VECTOR *sources);
 void print_build_log(char *build_log);
 
 int main(void) {
-    cl_int global_errcode = DEFAULT_ERROR;
+    BEGIN
 
     cl_platform_id *platforms = NULL;
     char *platform_name = NULL;
@@ -62,8 +62,8 @@ int main(void) {
 
     /// ------------------------------------------------------------------------------------------------------------ ///
 
-    GET_CL(context, clCreateContext(NULL, num_devices, devices, NULL, NULL, &errcode))
-    GET_CL(program, clCreateProgramWithSource(context, sources->length, sources->data, NULL, &errcode))
+    GET_CL(context, clCreateContext(NULL, num_devices, devices, NULL, NULL, ERRCODE))
+    GET_CL(program, clCreateProgramWithSource(context, sources->length, sources->data, NULL, ERRCODE))
 
     {
         cl_int build_status = clBuildProgram(program, num_devices, devices, "", NULL, NULL);
@@ -74,24 +74,24 @@ int main(void) {
         print_build_log(build_log);
         if (build_status != CL_SUCCESS) {
             fprintf(stderr, "Build FAIL.\n");
-            goto clean;
+            ERROR
         }
         printf("Build success.\n\n");
     }
 
     /// ------------------------------------------------------------------------------------------------------------ ///
 
-    GET_CL(kernel, clCreateKernel(program, "add", &errcode))
+    GET_CL(kernel, clCreateKernel(program, "add", ERRCODE))
 
-    GET_CL(a_mem, clCreateBuffer(context, CL_MEM_READ_ONLY, sizeof(cl_int), NULL, &errcode))
-    GET_CL(b_mem, clCreateBuffer(context, CL_MEM_READ_ONLY, sizeof(cl_int), NULL, &errcode))
-    GET_CL(c_mem, clCreateBuffer(context, CL_MEM_WRITE_ONLY, sizeof(cl_int), NULL, &errcode))
+    GET_CL(a_mem, clCreateBuffer(context, CL_MEM_READ_ONLY, sizeof(cl_int), NULL, ERRCODE))
+    GET_CL(b_mem, clCreateBuffer(context, CL_MEM_READ_ONLY, sizeof(cl_int), NULL, ERRCODE))
+    GET_CL(c_mem, clCreateBuffer(context, CL_MEM_WRITE_ONLY, sizeof(cl_int), NULL, ERRCODE))
 
     CHECK_CL(clSetKernelArg(kernel, 0, sizeof(cl_mem), &a_mem))
     CHECK_CL(clSetKernelArg(kernel, 1, sizeof(cl_mem), &b_mem))
     CHECK_CL(clSetKernelArg(kernel, 2, sizeof(cl_mem), &c_mem))
 
-    GET_CL(command_queue, clCreateCommandQueue(context, device_id, 0, &errcode))
+    GET_CL(command_queue, clCreateCommandQueue(context, device_id, 0, ERRCODE))
 
     /// ------------------------------------------------------------------------------------------------------------ ///
 
@@ -108,15 +108,14 @@ int main(void) {
     if (a + b != c) {
         fprintf(stderr, "Executed successfully, BUT not correct.\n");
         fprintf(stderr, "Executed %d + %d successfully, got %d (expected %d).\n", a, b, c, a + b);
-        goto clean;
+        ERROR
     }
 
     printf("Executed %d + %d successfully, got %d (expected %d).\n", a, b, c, a + b);
 
     /// ============================================================================================================ ///
 
-    global_errcode = 0;
-clean:
+    FREE_BEG
     CUSTOM_FREE(command_queue, clReleaseCommandQueue)
     CUSTOM_FREE(c_mem, clReleaseMemObject)
     CUSTOM_FREE(b_mem, clReleaseMemObject)
@@ -130,8 +129,7 @@ clean:
     FREE(devices)
     FREE(platform_name)
     FREE(platforms)
-
-    return global_errcode;
+    RETURN
 }
 
 void print_init_info(char *platform_name, char *device_name, cl_platform_id platform_id, cl_device_id device_id) {
