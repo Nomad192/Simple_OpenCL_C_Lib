@@ -60,6 +60,14 @@ GET_CL_PARAM_WITH_SIZE(TYPE, VARIABLE, cl_uint, VARIABLE_NUM, FUNC_GET_NUM, FUNC
     if (VARIABLE == NULL) { fprintf(stderr, "Error get " #VARIABLE "\n"); global_errcode = DEFAULT_ERROR; goto clean; } \
 }
 
+#define BEGIN cl_int global_errcode = DEFAULT_ERROR;
+
+#define ERROR goto clean;
+
+#define FREE_BEG \
+    global_errcode = CL_SUCCESS; \
+clean:
+
 #define FREE(PTR) CUSTOM_FREE(PTR, free)
 
 #define CUSTOM_FREE(PTR, FUNC) \
@@ -70,5 +78,7 @@ GET_CL_PARAM_WITH_SIZE(TYPE, VARIABLE, cl_uint, VARIABLE_NUM, FUNC_GET_NUM, FUNC
         PTR = NULL; \
     } \
 }
+
+#define RETURN return global_errcode;
 
 #endif //SIMPLE_OPENCL_C_LIB__SCL_TOOLS_H
