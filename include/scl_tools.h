@@ -3,6 +3,8 @@
 
 #include "scl_types.h"
 
+#define ERRCODE &errcode
+
 #define GET_CL_PARAM_NO_SIZE(TYPE, VARIABLE, TYPE_NUM, VARIABLE_NUM, FUNC_GET_NUM, FUNC_GET_ARRAY) \
 { \
     cl_int errcode; \
